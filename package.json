@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Amazon like Node app",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pharcside/Bamazon.git"
+  },
+  "author": "Brian Corbett",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pharcside/Bamazon/issues"
+  },
+  "homepage": "https://github.com/Pharcside/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^6.4.1",
+    "mysql": "^2.17.1"
+  }
+}

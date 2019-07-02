@@ -43,37 +43,38 @@ function startPrompt() {
 function inventory() {
     var table = new Table({
         head: ["ID", "Item", "Department", "Price", "Stock"],
-        colWidths: [10, 50, 30, 25, 25]
-    });
+        colWidths: [05, 20, 20, 20, 20],
 
+    });
     listInventory();
 
     function listInventory() {
-        connection.query("SELECT * FROM products", function (res) {
+        connection.query("SELECT * FROM products", function (err, res) {
             for (var i = 0; i < res.length; i++) {
-                var itemId = res[i].id,
-                productName = res[i].product_name,
-                departmentName = res[i].department_name,
-                price = res[i].price,
-                stockQuantity = res[i].stock_quantity;
+                var itemId = res[i].id;
+                var productName = res[i].product_name;
+                var departmentName = res[i].department_name;
+                var price = res[i].price;
+                var stockQuantity = res[i].stock_quantity;
 
-          table.push(
-              [itemId, productName, departmentName, price, stockQuantity]
-        );
 
-            };
+
+                table.push(
+                    [itemId, productName, departmentName, price, stockQuantity]
+                );
+
+            }
             console.log("~~~~~~~~~~~~~~~~Current Inventory~~~~~~~~~~~~~~~~~~~~~~~~");
             console.log(table.toString());
-            connection.end();
             continuePrompt();
-
-
-        }
-
-
+        },
+        
         )
+       
     }
-}
+    
+};
+
 
 
 function continuePrompt() {
@@ -81,13 +82,14 @@ function continuePrompt() {
         type: "confirm",
         name: "confirm",
         message: "Would you like to purchace an item?",
-        default: true
+        default: true,
 
-    }]).then(function (user) {
-        if (user.continue === true) {
+    }]).then(function(user) {
+        if (user.continue = true) {
             selectionPrompt();
         } else {
             console.log("Come back soon!")
+           connection.end();
         }
     });
 }
@@ -104,10 +106,10 @@ function selectionPrompt() {
         type: "input",
         name: "inputNumber",
         message: "How many units of this item would you like to buy?",
-    }    
+    }
 
-    
-]).then(function (userPurchace) {
+
+    ]).then(function (userPurchace) {
         connection.query("SELECT * FROM products WHERE item_id=?", userPurchace.inputId, function (err, res) {
             for (var i = 0; i < res.length; i++) {
                 if (userPurchace.inputNumber > res[i]
@@ -133,43 +135,45 @@ function selectionPrompt() {
 
                     var newStock = (res[i].stock_quantity - userPurchace.inputNumber);
                     var purchaceID = (userPurchace.inputID);
-                   // console.log(newStock);
-                   confirmPrompt(newStock, purchaceID);
+                    // console.log(newStock);
+                    confirmPrompt(newStock, purchaceID);
                 }
             }
         })
 
-    })}
+    })
+}
 
-    function confirmPrompt(newStock, purchaseId) {
+function confirmPrompt(newStock, purchaseId) {
 
-        inquirer.prompt([{
-    
-            type: "confirm",
-            name: "confirmPurchase",
-            message: "Are you sure you would like to purchase this item and quantity?",
-            default: true
-    
-        }]).then(function(userConfirm) {
-            if (userConfirm.confirmPurchase === true) {
-    
-                
-    
-                connection.query("UPDATE products SET ? WHERE ?", [{
-                    stock_quantity: newStock
-                }, {
-                    item_id: purchaseId
-                }], function(err, res) {});
-    
-                console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                console.log("Purchace completed");
-                console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                startPrompt();
-            } else {
-                console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                console.log("No worries. Maybe next time!");
-                console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                startPrompt();
-            }
-            connection.end();
-        });}
+    inquirer.prompt([{
+
+        type: "confirm",
+        name: "confirmPurchase",
+        message: "Are you sure you would like to purchase this item and quantity?",
+        default: true
+
+    }]).then(function (userConfirm) {
+        if (userConfirm.confirmPurchase = true) {
+
+
+
+            connection.query("UPDATE products SET ? WHERE ?", [{
+                stock_quantity: newStock
+            }, {
+                item_id: purchaseId
+            }], function (err, res) { });
+
+            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            console.log("Purchace completed");
+            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            startPrompt();
+        } else {
+            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            console.log("No worries. Maybe next time!");
+            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            startPrompt();
+        }
+
+    });
+}
